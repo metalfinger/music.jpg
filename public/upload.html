@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>♬.jpg</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/jpg" href="https://cdn.glitch.me/63476ee1-7145-4963-af4e-d8440e66bdd7%2Ffavicon.ico?v=1633440268923" />
+</head>
+
+<body class="body">
+    <div class="main__wrapper flex-fullheight">
+        <div class="nav">
+            <div class="logo__holder">
+                <div class="logo__text">♬.jpg</div>
+            </div>
+        </div>
+        <div class="content__holder ">
+            <div class="btn__text white__instruction">Have you ever wondered how an image can sound? Let's try!</div>
+            <div class="upload__wrapper">
+                <div class="btn__wrapper reupload__btn">
+                    <label for="file-upload" class="custom-file-upload btn__text">
+                    <i class="fa fa-cloud-upload"></i>  Upload
+                </label>
+
+                    <!-- <div class="btn__text">upload</div> -->
+                    <input id="file-upload" type='file' name='sampleFile' class="btn__text" />
+                </div>
+
+
+
+
+            </div>
+        </div>
+        <div class="main__holder hide">
+            <div class="button__holder">
+                <div class="btn__leftside">
+                    <div class="btn__wrapper play__btn disable__btn">
+                        <div class="btn__text" id="playBtn">▶ play</div>
+                    </div>
+                    <div class="btn__wrapper reupload__btn disable__btn">
+                        <label for="file-upload" class="custom-file-upload btn__text">
+                    <i class="fa fa-cloud-upload"></i>  reUpload image
+                </label>
+                        <!-- <div class="btn__text">upload</div> -->
+                        <input id="file-upload" type='file' class="btn__text" />
+                    </div>
+                </div>
+                <div class="btn__rightside">
+                    <div class="btn__wrapper upload__server__btn disable__btn">
+                        <div class="btn__text">Upload to wall</div>
+                    </div>
+                </div>
+            </div>
+            <div class="image__holder">
+                <img class="mainImage" id="test" src="#" alt="">
+                <div id="sketchholder"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tonaljs/tonal/browser/tonal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.26/Tone.js" integrity="sha512-+esjJ8NSEfoB5Sr8R7jTcYxCR1Bd6q9C+WQC0JA2UXVPT8Mlo/TJqqyp0qeeoxFzkAaa8t6tZCHLGmw3oNI2Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script> -->
+    <script src="music.js"></script>
+    <script src="upload.js"></script>
+</body>
+
+</html>
