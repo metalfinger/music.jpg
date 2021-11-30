@@ -178,7 +178,7 @@ function loopstep(time) {
         if (noteCounter % 2 == 0) {
             // synthBeat.triggerAttackRelease("C4", "4n");
             // console.log("base", noteCounter);
-            synthBeat.triggerAttackRelease(note, "16n");
+            // synthBeat.triggerAttackRelease(note, "16n");
         }
         if (prevNote1 != note1) {
             // synth1.triggerAttackRelease(note1, "8n", time);
