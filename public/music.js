@@ -15,9 +15,9 @@ function initAudio() {
     if (!audioIsInit) {
         audioIsInit = true;
 
-        scale = Tonal.Scale.get("C4 major").notes;
+        scale = Tonal.Scale.get("C3 major").notes;
         // scale = scale.concat(Tonal.Scale.get("C3 major").notes);
-        // scale = scale.concat(Tonal.Scale.get("C4 major").notes);
+        scale = scale.concat(Tonal.Scale.get("C4 major").notes);
         scale = scale.concat(Tonal.Scale.get("C5 major").notes);
         scale = scale.concat(Tonal.Scale.get("C6 major").notes);
 
@@ -42,10 +42,10 @@ function initAudio() {
 
         //!Get Chords Ends
 
-        reverb = new Tone.JCReverb(0.4).toDestination();
+        reverb = new Tone.JCReverb(0.5).toDestination();
 
         synth = new Tone.PolySynth().connect(reverb);
-        synth.set({ detune: -2600 });
+        synth.set({ detune: -1800 });
 
         synth1 = new Tone.PolySynth().connect(reverb);
         synth1.set({ detune: -1200 });
@@ -54,7 +54,7 @@ function initAudio() {
         synth2.set({ detune: -1200 });
 
         synthBeat = new Tone.PolySynth().connect(reverb);
-        synthBeat.set({ detune: -3300 });
+        synthBeat.set({ detune: -3000 });
 
         loop = new Tone.Loop(loopstep, "8n");
         loop.start();
