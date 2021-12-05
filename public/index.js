@@ -17,6 +17,9 @@ $(document).ready(function() {
 
     //Fetch all data from database  
     function fetchAllData() {
+
+        console.log("Fetching data from database");
+
         fetch('getall', {
                 method: 'POST',
                 body: JSON.stringify({ data: 'test' }),
