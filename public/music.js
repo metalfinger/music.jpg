@@ -82,8 +82,8 @@ function playSound(_imageDataLocal, parentOfImageHolder, _isUploaderOpen, _curre
         "position": "absolute",
         "top": "0%",
         "left": "0%",
-        "width": "25%",
-        "height": "12.5%",
+        "width": "12.5%",
+        "height": "25%",
         // "background-color": "rgb(255 4 4 / 48%)",
         "border-top-style": "solid",
         "border-top-width": "1px",
@@ -129,12 +129,12 @@ function loopstep(time) {
 
 
 
-        let xIndex = (noteCounter % 4);
-        let yIndex = Math.floor(noteCounter / 4);
+        let xIndex = (noteCounter % 8);
+        let yIndex = Math.floor(noteCounter / 8);
         console.log(xIndex, yIndex);
 
-        imageScrubber.css("left", (xIndex * 25).toString() + "%");
-        imageScrubber.css("top", (yIndex * 12.5).toString() + "%");
+        imageScrubber.css("left", (xIndex * 12.5).toString() + "%");
+        imageScrubber.css("top", (yIndex * 25).toString() + "%");
 
         //!Drawing Ends
 
@@ -194,7 +194,7 @@ function loopstep(time) {
 
         //!Check for Playing....
         var beatCount = noteCounter % 4;
-        var playingText = "▶ playing (" + (imageData.length - noteCounter).toString() + ")";
+        var playingText = "▶ playing (Counter : " + (imageData.length - noteCounter).toString() + ")";
 
 
         // for (var bCounter = 0; bCounter < beatCount; bCounter++) {
@@ -221,7 +221,11 @@ function loopstep(time) {
             $("#playBtn").text("▶ play again");
         } else {
             $(".art__unit").removeClass("disable__btn");
-            $(currentPlayButtonReference).text("▶ play");
+
+            let currenlyPlayedNumber = $(currentPlayButtonReference).parent().attr("data-played");
+            $(currentPlayButtonReference).html('<span class="played__data">▶ play</span> (Played : ' + currenlyPlayedNumber + ')');
+
+            //<span class="played__data">▶ play</span> (Played : ' + element.numPlayed + ')
         }
     }
 }

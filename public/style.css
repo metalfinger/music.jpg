@@ -243,6 +243,10 @@ input[type="file"] {
 
 /*! ART PAGE */
 
+.played__data {
+    font-weight: bolder;
+}
+
 .upload__btn {
     margin-right: 0em;
 }

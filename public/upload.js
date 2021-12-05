@@ -1,16 +1,32 @@
+//!Firebase code starts here
+// adding firebase data
+var firebaseConfig = {
+    apiKey: "AIzaSyBp_GyL9SdTed56B5zDewUfBx7iXp9V7o8",
+    authDomain: "music-jpg-ac824.firebaseapp.com",
+    projectId: "music-jpg-ac824",
+    storageBucket: "music-jpg-ac824.appspot.com",
+    messagingSenderId: "48842147145",
+    appId: "1:48842147145:web:958ba842554dee3d3a8698"
+};
+
+firebase.initializeApp(firebaseConfig);
+//!Firebase code ends here
+
+
 $(document).ready(function() {
     console.log("ready!");
 
     //!Uploading Image Code Starts
     document
         .querySelector('input[type="file"]')
-        .addEventListener("change", function() {
+        .addEventListener("change", function(e) {
             if (this.files && this.files[0]) {
-                // console.log(document.getElementById('test'));
 
                 var img = document.getElementById("test");
 
                 img.src = URL.createObjectURL(this.files[0]); // set src to blob url
+
+                console.log("Image Srouce ", img.src);
 
                 $("img")
                     .one("load", function() {
@@ -45,6 +61,8 @@ $(document).ready(function() {
     var imageWidth;
     var imageHeight;
 
+
+
     $(".play__btn").click(function() {
         console.log("1");
 
@@ -68,6 +86,8 @@ $(document).ready(function() {
         //uploadFile();
 
 
+
+
         let mainParent = $(".image__holder");
 
         imageWidth = image.width;
@@ -80,6 +100,28 @@ $(document).ready(function() {
         console.log(mainParent.width(), mainParent.height());
 
 
+        //!Referring to the canvas
+        var canvas = document.getElementById('canvasid'),
+            context = canvas.getContext('2d');
+
+        //!Resizing the canvas
+        canvas.width = imageWidth;
+        canvas.height = imageHeight;
+
+        //!CUpload Image to Canvas
+        // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        // ctx.drawImage(image, 0, 0);
+
+        var img = document.getElementById("test");
+        // resizeMyCanvas(imageWidth, imageHeight);
+        context.drawImage(img, 0, 0, imageWidth, imageHeight);
+
+        let canvasPixelColor = context.getImageData(0, 0, imageWidth, imageHeight);
+
+        let pixels = canvasPixelColor.data;
+
+        console.log(pixels);
+
         imageDataLocal = [];
         pixelData = [];
 
@@ -91,12 +133,19 @@ $(document).ready(function() {
         var pixelsInWidth = parseInt(imageWidth / widthDivider);
         var pixelsInHeight = parseInt(imageHeight / heightDivider);
 
+        console.log(imageWidth, imageHeight, pixelsInWidth, pixelsInHeight);
+
         //!Travelling through All the pixels
         for (var j = 0; j < heightDivider; j++) {
             for (var i = 0; i < widthDivider; i++) {
 
 
                 let averageRGB = [0, 0, 0];
+                let rr = 0;
+                let gg = 0;
+                let bb = 0;
+
+                // console.log(averageRGB, i * pixelsInWidth, i * pixelsInWidth + pixelsInWidth, j * pixelsInHeight, j * pixelsInHeight + pixelsInHeight);
 
                 for (var xPixel = 0; xPixel < pixelsInWidth; xPixel++) {
                     for (var yPixel = 0; yPixel < pixelsInHeight; yPixel++) {
@@ -104,6 +153,16 @@ $(document).ready(function() {
                         var currentY = j * pixelsInHeight + yPixel;
 
                         let rgbaData = image.getPixelXY(currentX, currentY);
+
+                        let canvasPixelColor = context.getImageData(currentX, currentY, 1, 1);
+
+                        let pixels = canvasPixelColor.data;
+
+                        if (xPixel == 2 && yPixel == 0) {
+
+
+                            // console.log(i, j, currentX, currentY, rgbaData);
+                        }
 
                         // if (
                         //     (rgbaData[0] == 255) &&
@@ -119,12 +178,18 @@ $(document).ready(function() {
                         //     averageRGB[3] = (averageRGB[3] + rgbaData[3]) / 2;
                         // }
 
-                        averageRGB[0] = (averageRGB[0] + rgbaData[0]) / 2;
-                        averageRGB[1] = (averageRGB[1] + rgbaData[1]) / 2;
-                        averageRGB[2] = (averageRGB[2] + rgbaData[2]) / 2;
+                        averageRGB[0] = (averageRGB[0] + pixels[0]) / 2;
+                        averageRGB[1] = (averageRGB[1] + pixels[1]) / 2;
+                        averageRGB[2] = (averageRGB[2] + pixels[2]) / 2;
+
+                        rr = (rr + pixels[3]) / 2;
+                        gg = (gg + pixels[3]) / 2;
+                        bb = (bb + pixels[3]) / 2;
                     }
                 }
+                // console.log(averageRGB, i * pixelsInWidth, i * pixelsInWidth + pixelsInWidth, j * pixelsInHeight, j * pixelsInHeight + pixelsInHeight);
 
+                // console.log(rr, gg, bb);
                 imageDataLocal.push(averageRGB);
             }
         }
@@ -171,44 +236,60 @@ $(document).ready(function() {
 
     //!Uploading to server
     const uploadFile = () => {
+        //!Get source of img tag with test ID
+        let image = document.getElementById("test");
+        //!Get source of image
+        let imageSrc = image.src;
+        console.log(imageSrc);
+
 
         const input = document.getElementById('file-upload');
 
         let file = input.files[0];
 
-        console.log("FILE");
-        console.log(file);
-
-        // add file to FormData object
-
-        let fd = new FormData();
-        fd.append('sampleFile', file);
-        fd.append('musicData', imageDataLocal);
 
 
-        // send `POST` request
-        fetch('/upload', {
-                method: 'POST',
-                body: fd
-            })
-            .then(res => {
-                res.json();
-                window.location = "/";
-            })
-            .then(json => {
-                // console.log(json);
-                // console.log("Redirect to home");
-            })
-            .catch(err => console.log(err));
 
-        fetch('/getall', {
-                method: 'POST',
-                body: {}
+        //!Firebase Starts       
+        var storageRef = firebase.storage().ref('images/' + file.name);
+        var thisRef = storageRef.put(file);
+        thisRef.on('state_changed', function(snapshot) {
 
-            })
-            .then(res => res.json())
-            .then(json => console.log(json))
-            .catch(err => console.log(err));
+
+        }, function(error) {
+
+        }, function() {
+            // Uploaded completed successfully, now we can get the download URL
+            thisRef.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+
+                console.log("DOWNLOADABLE URL : " + downloadURL);
+
+                // add file to FormData object
+                let fd = new FormData();
+                fd.append('sampleFile', file);
+                fd.append('musicData', imageDataLocal);
+                fd.append('imageSrc', downloadURL);
+
+                // send `POST` request
+                fetch('/upload', {
+                        method: 'POST',
+                        body: fd
+                    })
+                    .then(res => {
+                        res.json();
+                        window.location = "/";
+                    })
+                    .then(json => {
+                        // console.log(json);
+                        // console.log("Redirect to home");
+                    })
+                    .catch(err => console.log(err));
+            });
+        });
+        //!Firebase Ends
+
+
+
     }
 
     //!Redirect to home when clicked on logo__holder

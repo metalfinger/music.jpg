@@ -1,30 +1,43 @@
 $(document).ready(function() {
 
+    // fetch('test', {
+    //         method: 'POST',
+    //         body: JSON.stringify({ data: 'test' }),
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => console.log(data));
+
+
     fetchAllData();
 
     let musicData = [];
 
     //Fetch all data from database  
     function fetchAllData() {
-        fetch('/getall', {
+        fetch('getall', {
                 method: 'POST',
-                body: JSON.stringify({ data: "data" }),
+                body: JSON.stringify({ data: 'test' }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(json => {
-                console.log("Data is Here");
-                console.log(json)
-                console.log(json.length);
-
+                console.log(json);
+                console.log(json[0].id);
+                console.log(json[0].data);
 
                 for (let index = 0; index < json.length; index++) {
-                    const element = json[index];
+                    const element = json[index].data;
 
-                    if (element.FileName != null) {
-                        console.log(index, element.FileName);
+                    if (element.imageSrc != null) {
+                        console.log(index, element.imageSrc);
 
-                        let imageUrl = "myimages/" + element.FileName;
-                        let thisElementID = element._id;
+                        let imageUrl = element.imageSrc;
+                        let thisElementID = json[index].id;
 
                         // imageUrl = imageUrl.replace(/\//g, "//'");
 
@@ -38,8 +51,8 @@ $(document).ready(function() {
                             '        </div>' +
                             '    </div>' +
                             '    <div class="art__btn__holder">' +
-                            '        <div class="btn__wrapper play__art" data-index=' + thisElementID.toString() + '>' +
-                            '            <div class="btn__text">▶ play</div>' +
+                            '        <div class="btn__wrapper play__art" data-played=' + element.numPlayed + ' data-index=' + thisElementID.toString() + '>' +
+                            '            <div class="btn__text"><span class="played__data">▶ play</span> (Played : ' + element.numPlayed + ')</div>' +
                             '        </div>' +
                             '    </div>' +
                             '</div>';
@@ -69,8 +82,77 @@ $(document).ready(function() {
 
                     getMusicNotes(thisElementID, parentOfImageHolder, $(this).find(".btn__text"));
                 });
-            })
-            .catch(err => console.log(err));
+            });
+
+
+        // fetch('/getallold', {
+        //         method: 'POST',
+        //         body: JSON.stringify({ data: "data" }),
+        //     })
+        //     .then(res => {
+        //         res.json();
+        //         console.log(res.body);
+        //     })
+        //     .then(json => {
+        //         console.log("Data is Here");
+        //         console.log(json);
+        //         //     // console.log(json.length);
+
+
+        //         // for (let index = 0; index < json.length; index++) {
+        //         //     const element = json[index];
+
+        //         //     if (element.FileName != null) {
+        //         //         console.log(index, element.FileName);
+
+        //         //         let imageUrl = "myimages/" + element.FileName;
+        //         //         let thisElementID = element._id;
+
+        //         //         // imageUrl = imageUrl.replace(/\//g, "//'");
+
+        //         //         console.log(imageUrl);
+
+        //         //         let subInnerHtml =
+        //         //             '<div class="art__unit">' +
+        //         //             '    <div class="art__image__holder">' +
+        //         //             '        <div class="art__image">' +
+        //         //             '            <div class="art__image__wrapper"><img src="' + imageUrl.toString() + '" class="art__image__instance"></div>' +
+        //         //             '        </div>' +
+        //         //             '    </div>' +
+        //         //             '    <div class="art__btn__holder">' +
+        //         //             '        <div class="btn__wrapper play__art" data-index=' + thisElementID.toString() + '>' +
+        //         //             '            <div class="btn__text">▶ play</div>' +
+        //         //             '        </div>' +
+        //         //             '    </div>' +
+        //         //             '</div>';
+        //         //         // '<div class="art__unit">' +
+        //         //         // '    <div class="art__image__holder">' +
+        //         //         // '        <div class="art__image" style="background-image:url(' + imageUrl.toString() + ');"></div>' +
+        //         //         // '    </div>' +
+        //         //         // '    <div class="art__btn__holder">' +
+        //         //         // '        <div class="btn__wrapper play__art" data-index=' + thisElementID.toString() + '>' +
+        //         //         // '            <div class="btn__text">play</div>' +
+        //         //         // '        </div>' +
+        //         //         // '    </div>' +
+        //         //         // '</div>';
+
+        //         //         $("#art__container").append(subInnerHtml);
+        //         //     }
+        //         // }
+
+        //         // //!Add Button Click Event
+        //         // $(".play__art").click(function() {
+        //         //     console.log("Play Button Clicked");
+        //         //     console.log($(this));
+        //         //     let thisElementID = $(this).attr("data-index");
+        //         //     console.log(thisElementID);
+
+        //         //     let parentOfImageHolder = $(this).closest(".art__unit").find(".art__image__wrapper");
+
+        //         //     getMusicNotes(thisElementID, parentOfImageHolder, $(this).find(".btn__text"));
+        //         // });
+        //     })
+        //     .catch(err => console.log(err));
     }
 
     function getMusicNotes(_id, parentOfImageHolder, thisPlayBtn) {
@@ -81,15 +163,21 @@ $(document).ready(function() {
 
         fetch('/getmusicnotes', {
                 method: 'POST',
-                body: fd,
+                body: JSON.stringify({ data: _id }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
             .then(res => res.json())
             .then(json => {
-                console.log(json);
-                console.log(json[0].MusicData);
-                console.log(typeof(json[0].MusicData));
 
-                var array = json[0].MusicData.split(',');
+                console.log(json.musicData);
+                console.log(json.numPlayed);
+
+                // // console.log(json[0].MusicData);
+                // // console.log(typeof(json[0].MusicData));
+
+                var array = json.musicData.split(',');
                 console.log(array);
                 console.log("MAGIC ", array.length);
 
@@ -102,8 +190,11 @@ $(document).ready(function() {
                 }
 
                 console.log(imageDataLocal);
+
                 musicData = imageDataLocal;
 
+                //!Updata data-played attribute
+                $(thisPlayBtn).parent().attr("data-played", json.numPlayed + 1);
                 playSound(musicData, parentOfImageHolder, false, thisPlayBtn);
 
                 //!Maintain Play Button Status
