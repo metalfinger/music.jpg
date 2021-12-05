@@ -4,112 +4,191 @@ const express = require('express')
 //!Express File Uploader
 const fileUpload = require('express-fileupload');
 
+//!Firebase Node Server
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./firebasekey/music-jpg-ac824-firebase-adminsdk-gwqiq-4012c02e81.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
+
+let db = admin.firestore();
+
+
+
+async function addDataToFirestore() {
+
+
+    // Add a new document with a generated id.
+    const res = await db.collection('maindata').add({
+        date: Date.now(),
+        name: 'Tokyo',
+        country: 'Japan'
+    });
+
+    console.log('Added document with ID: ', res.id);
+}
+
+async function addDocument(_musicData, _imageSrc, _numPlayed) {
+    // Add a new document with a generated id.
+    const res = await db.collection('maindata').add({
+        createdAt: Date.now(),
+        numPlayed: _numPlayed,
+        musicData: _musicData,
+        imageSrc: _imageSrc
+    });
+
+    console.log('Added document with ID: ', res.id);
+}
+
+async function getAllDocuments() {
+    const mainDataRef = db.collection('maindata');
+
+    // const snapshot = await citiesRef.where('capital', '==', true).get();
+    const mainData = await mainDataRef.get().then(function(snapshot) {
+
+
+        let masterData = [];
+
+        snapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, ' => ', doc.data());
+            let dataObject = { "id": doc.id, "data": doc.data() };
+            masterData.push(dataObject);
+        });
+
+        return masterData;
+    });
+
+    return mainData;
+}
+
+async function getDocument(id) {
+    const mainDataRef = db.collection('maindata').doc(id);
+
+    // const snapshot = await citiesRef.where('capital', '==', true).get();
+    const mainData = await mainDataRef.get();
+
+    const res = await mainDataRef.update({ numPlayed: (mainData.data().numPlayed) + 1 });
+
+    return mainData.data();
+}
+
+getDocument("JZ9SPQ866igmIFKiZTaw").then(function(data) {
+    console.log(data);
+});
+
+
+
 
 //!FIREBASE CODE STARTS --------------------- 
-var firebase = require('firebase/app');
-var firestore = require('firebase/firestore/lite');
-var firestorage = require('firebase/storage');
+// var firebase = require('firebase/app');
+// var firestore = require('firebase/firestore/lite');
+// var firestorage = require('firebase/storage');
 
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: "AIzaSyBp_GyL9SdTed56B5zDewUfBx7iXp9V7o8",
-    authDomain: "music-jpg-ac824.firebaseapp.com",
-    projectId: "music-jpg-ac824",
-    storageBucket: "music-jpg-ac824.appspot.com",
-    messagingSenderId: "48842147145",
-    appId: "1:48842147145:web:958ba842554dee3d3a8698"
-};
+// // Your web app's Firebase configuration
+// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBp_GyL9SdTed56B5zDewUfBx7iXp9V7o8",
+//     authDomain: "music-jpg-ac824.firebaseapp.com",
+//     projectId: "music-jpg-ac824",
+//     storageBucket: "music-jpg-ac824.appspot.com",
+//     messagingSenderId: "48842147145",
+//     appId: "1:48842147145:web:958ba842554dee3d3a8698"
+// };
 
-// Initialize Firebase
-var firebaseApp = firebase.initializeApp(firebaseConfig);
+// // Initialize Firebase
+// var firebaseApp = firebase.initializeApp(firebaseConfig);
 
-var firestoreDB = firestore.getFirestore(firebaseApp);
+// var firestoreDB = firestore.getFirestore(firebaseApp);
 
-const mainDataReference = firestore.collection(firestoreDB, 'maindata');
+// const mainDataReference = firestore.collection(firestoreDB, 'maindata');
 
-//!Get all the existing Documents
-async function getAllDocuments() {
+// //!Get all the existing Documents
+// async function getAllDocumentsOld() {
 
-    // let myRef = firestore.collection(firestoreDB, "maindata");
-    let myRef = firestore.collection(firestoreDB, "maindata");
-
-
-    let docData = await firestore.getDocs(myRef)
-        .then(function(snapshot) {
-
-            let masterData = [];
-            snapshot.docs.forEach(doc => {
-                let dataObject = { "id": doc.id, "data": doc.data() };
-                masterData.push(dataObject);
-                // console.log(doc.id, doc.data());
-            });
-
-            return masterData;
-
-        }).catch(function(error) {
-            console.log("error");
-        });
+//     // let myRef = firestore.collection(firestoreDB, "maindata");
+//     let myRef = firestore.collection(firestoreDB, "maindata");
 
 
-    return docData;
-}
+//     let docData = await firestore.getDocs(myRef)
+//         .then(function(snapshot) {
 
-//!Get document with particular id
-async function getDocument(id) {
+//             let masterData = [];
+//             snapshot.docs.forEach(doc => {
+//                 let dataObject = { "id": doc.id, "data": doc.data() };
+//                 masterData.push(dataObject);
+//                 // console.log(doc.id, doc.data());
+//             });
 
-    const alovelaceDocumentRef = firestore.doc(firestoreDB, 'maindata', id);
-    console.log(alovelaceDocumentRef);
+//             return masterData;
 
-    const docSnap = await firestore.getDoc(alovelaceDocumentRef);
+//         }).catch(function(error) {
+//             console.log("error");
+//         });
 
-    // console.log(docSnap.data().imageSrc);
 
-    firestore.updateDoc(alovelaceDocumentRef, { numPlayed: (docSnap.data().numPlayed) + 1 })
-        .then(function() {
-            console.log("Document successfully updated!");
-        }).catch(function(error) {
-            console.error("Error updating document: ", error);
-        });
+//     return docData;
+// }
 
-    return docSnap.data();
-}
-//!Update document with particular id
-function updateDocument(_id, _numPlayed) {
+// //!Get document with particular id
+// async function getDocumentOld(id) {
 
-    const alovelaceDocumentRef = firestore.doc(firestoreDB, 'maindata', _id);
-    console.log(alovelaceDocumentRef);
+//     const alovelaceDocumentRef = firestore.doc(firestoreDB, 'maindata', id);
+//     console.log(alovelaceDocumentRef);
 
-    firestore.updateDoc(alovelaceDocumentRef, { numPlayed: _numPlayed })
-        .then(function() {
-            console.log("Document successfully updated!");
-        }).catch(function(error) {
-            console.error("Error updating document: ", error);
-        });
-}
+//     const docSnap = await firestore.getDoc(alovelaceDocumentRef);
+
+//     // console.log(docSnap.data().imageSrc);
+
+//     firestore.updateDoc(alovelaceDocumentRef, { numPlayed: (docSnap.data().numPlayed) + 1 })
+//         .then(function() {
+//             console.log("Document successfully updated!");
+//         }).catch(function(error) {
+//             console.error("Error updating document: ", error);
+//         });
 
 
 
-//! Add a new document with a generated id in firestore
-function addDocument(_musicData, _imageSrc, _numPlayed) {
-    firestore.addDoc(mainDataReference, { createdAt: Date.now(), numPlayed: _numPlayed, musicData: _musicData, imageSrc: _imageSrc })
-        .then(function(docRef) {
-            console.log("Document written with ID: ", docRef.id);
-        }).catch(function(error) {
-            console.error("Error adding document: ", error);
-        });
-}
+//     return docSnap.data();
+// }
+// //!Update document with particular id
+// function updateDocument(_id, _numPlayed) {
+
+//     const alovelaceDocumentRef = firestore.doc(firestoreDB, 'maindata', _id);
+//     console.log(alovelaceDocumentRef);
+
+//     firestore.updateDoc(alovelaceDocumentRef, { numPlayed: _numPlayed })
+//         .then(function() {
+//             console.log("Document successfully updated!");
+//         }).catch(function(error) {
+//             console.error("Error updating document: ", error);
+//         });
+// }
 
 
 
-// updateDocument("xsvEAtrjhgppk2MXL9xm", "asdf", "asdfas", 5)
+// //! Add a new document with a generated id in firestore
+// function addDocumentOld(_musicData, _imageSrc, _numPlayed) {
+//     firestore.addDoc(mainDataReference, { createdAt: Date.now(), numPlayed: _numPlayed, musicData: _musicData, imageSrc: _imageSrc })
+//         .then(function(docRef) {
+//             console.log("Document written with ID: ", docRef.id);
+//         }).catch(function(error) {
+//             console.error("Error adding document: ", error);
+//         });
+// }
 
-function uploadImagetoFirebaseStorage(file, fileName) {
-    firestorage.getStorage().ref('images/' + Date.now()).put(file).then(function(snapshot) {
-        console.log('Uploaded a blob or file!');
-    });
-}
+
+
+// // updateDocument("xsvEAtrjhgppk2MXL9xm", "asdf", "asdfas", 5)
+
+// function uploadImagetoFirebaseStorage(file, fileName) {
+//     firestorage.getStorage().ref('images/' + Date.now()).put(file).then(function(snapshot) {
+//         console.log('Uploaded a blob or file!');
+//     });
+// }
 
 
 
