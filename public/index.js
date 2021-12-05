@@ -19,7 +19,7 @@ $(document).ready(function() {
     function fetchAllData() {
 
         console.log("Fetching data from database");
-        c
+
 
         fetch('getall', {
                 method: 'POST',
