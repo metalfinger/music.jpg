@@ -194,7 +194,7 @@ function loopstep(time) {
 
         //!Check for Playing....
         var beatCount = noteCounter % 4;
-        var playingText = '<div class="played__data">▶ playing</div> </br>(counter : ' + (imageData.length - noteCounter).toString() + ' times)';
+        var playingText = '<div class="played__data">▶ playing</div> </br>(counter : ' + (imageData.length - noteCounter).toString() + ')';
 
 
         // for (var bCounter = 0; bCounter < beatCount; bCounter++) {
