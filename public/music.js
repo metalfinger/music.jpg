@@ -194,7 +194,7 @@ function loopstep(time) {
 
         //!Check for Playing....
         var beatCount = noteCounter % 4;
-        var playingText = "▶ playing (Counter : " + (imageData.length - noteCounter).toString() + ")";
+        var playingText = '<div class="played__data">▶ playing</div> </br>(counter : ' + (imageData.length - noteCounter).toString() + ' times)';
 
 
         // for (var bCounter = 0; bCounter < beatCount; bCounter++) {
@@ -202,9 +202,10 @@ function loopstep(time) {
         // }
 
         if (isUploaderOpen) {
-            $("#playBtn").text(playingText);
+            playingText = '▶ playing(counter : ' + (imageData.length - noteCounter).toString() + ')';
+            $("#playBtn").html(playingText);
         } else {
-            $(currentPlayButtonReference).text(playingText);
+            $(currentPlayButtonReference).html(playingText);
         }
 
         noteCounter++;
@@ -221,6 +222,13 @@ function loopstep(time) {
             $("#playBtn").text("▶ play again");
         } else {
             $(".art__unit").removeClass("disable__btn");
+            $(currentPlayButtonReference).closest(".art__unit").removeClass("selected");
+            $(currentPlayButtonReference).removeClass("selected");
+
+            $(".sort__btn").removeClass("disable__btn");
+            $(".recent__btn").removeClass("disable__btn");
+
+
 
             let currenlyPlayedNumber = $(currentPlayButtonReference).parent().attr("data-played");
             $(currentPlayButtonReference).html('<div class="played__data">▶ play</div> </br>(Played ' + currenlyPlayedNumber + ' times)');

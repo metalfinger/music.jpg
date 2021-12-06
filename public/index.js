@@ -84,6 +84,8 @@ $(document).ready(function() {
                     let thisElementID = $(this).attr("data-index");
                     console.log(thisElementID);
 
+
+
                     let parentOfImageHolder = $(this).closest(".art__unit").find(".art__image__wrapper");
 
                     getMusicNotes(thisElementID, parentOfImageHolder, $(this).find(".btn__text"));
@@ -206,6 +208,14 @@ $(document).ready(function() {
                 //!Maintain Play Button Status
                 $(".art__unit").addClass("disable__btn");
                 $(thisPlayBtn).closest(".art__unit").removeClass("disable__btn");
+
+                //!Select this Button
+                $(thisPlayBtn).closest(".art__unit").addClass("selected");
+                $(thisPlayBtn).addClass("selected");
+
+                //!Disable Other Buttons
+                $(".sort__btn").addClass("disable__btn");
+                $(".recent__btn").addClass("disable__btn");
             });
     }
 

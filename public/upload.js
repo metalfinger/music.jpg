@@ -71,10 +71,25 @@ $(document).ready(function() {
 
     });
 
+    let isUploading = false;
+
     $(".upload__server__btn").click(function() {
         console.log("Upload Clicked");
-        uploadFile();
 
+        if (!isUploading) {
+            //disable play__btn
+            $(".play__btn").addClass("disable__btn");
+
+            //disable reupload__btn
+            $(".reupload__btn").addClass("disable__btn");
+
+            //Change text of upload__server__btn
+            $(".upload__server__btn").find(".btn__text").text("Uploading...");
+            $(".upload__server__btn").addClass("selected");
+
+            uploadFile();
+
+        }
     });
 
 
@@ -116,11 +131,23 @@ $(document).ready(function() {
         // resizeMyCanvas(imageWidth, imageHeight);
         context.drawImage(img, 0, 0, imageWidth, imageHeight);
 
-        let canvasPixelColor = context.getImageData(0, 0, imageWidth, imageHeight);
+        // let canvasPixelColor = context.getImageData(0, 0, 2, 2);
+        // console.log("Trace data Here");
+        // for (let i = 0; i < canvasPixelColor.data.length; i += 4) {
+        //     let r = canvasPixelColor.data[i];
+        //     let g = canvasPixelColor.data[i + 1];
+        //     let b = canvasPixelColor.data[i + 2];
+        //     let a = canvasPixelColor.data[i + 3];
 
-        let pixels = canvasPixelColor.data;
+        //     console.log(i, r, g, b, a);
+        // }
 
-        console.log(pixels);
+        // console.log(canvasPixelColor.width, canvasPixelColor.height, canvasPixelColor.data);
+
+
+        // let pixels = canvasPixelColor.data;
+
+        // console.log(pixels);
 
         imageDataLocal = [];
         pixelData = [];
@@ -135,62 +162,85 @@ $(document).ready(function() {
 
         console.log(imageWidth, imageHeight, pixelsInWidth, pixelsInHeight);
 
+
+
         //!Travelling through All the pixels
         for (var j = 0; j < heightDivider; j++) {
             for (var i = 0; i < widthDivider; i++) {
 
 
-                let averageRGB = [0, 0, 0];
-                let rr = 0;
-                let gg = 0;
-                let bb = 0;
+                // let averageRGB = [0, 0, 0];
+                // let rr = 0;
+                // let gg = 0;
+                // let bb = 0;
 
-                // console.log(averageRGB, i * pixelsInWidth, i * pixelsInWidth + pixelsInWidth, j * pixelsInHeight, j * pixelsInHeight + pixelsInHeight);
+                // // console.log(averageRGB, i * pixelsInWidth, i * pixelsInWidth + pixelsInWidth, j * pixelsInHeight, j * pixelsInHeight + pixelsInHeight);
 
-                for (var xPixel = 0; xPixel < pixelsInWidth; xPixel++) {
-                    for (var yPixel = 0; yPixel < pixelsInHeight; yPixel++) {
-                        var currentX = i * pixelsInWidth + xPixel;
-                        var currentY = j * pixelsInHeight + yPixel;
+                // for (var xPixel = 0; xPixel < pixelsInWidth; xPixel++) {
+                //     for (var yPixel = 0; yPixel < pixelsInHeight; yPixel++) {
+                //         var currentX = i * pixelsInWidth + xPixel;
+                //         var currentY = j * pixelsInHeight + yPixel;
 
-                        let rgbaData = image.getPixelXY(currentX, currentY);
+                //         let rgbaData = image.getPixelXY(currentX, currentY);
 
-                        let canvasPixelColor = context.getImageData(currentX, currentY, 1, 1);
+                //         let canvasPixelColor = context.getImageData(currentX, currentY, 1, 1);
 
-                        let pixels = canvasPixelColor.data;
+                //         let pixels = canvasPixelColor.data;
 
-                        if (xPixel == 2 && yPixel == 0) {
+                //         if (xPixel == 2 && yPixel == 0) {
 
 
-                            // console.log(i, j, currentX, currentY, rgbaData);
-                        }
+                //             // console.log(i, j, currentX, currentY, rgbaData);
+                //         }
 
-                        // if (
-                        //     (rgbaData[0] == 255) &&
-                        //     (rgbaData[1] == 255) &&
-                        //     (rgbaData[2] == 255)
-                        // ) {
-                        //     // console.log("sdf");
-                        // } else {
+                //         // if (
+                //         //     (rgbaData[0] == 255) &&
+                //         //     (rgbaData[1] == 255) &&
+                //         //     (rgbaData[2] == 255)
+                //         // ) {
+                //         //     // console.log("sdf");
+                //         // } else {
 
-                        //     averageRGB[0] = (averageRGB[0] + rgbaData[0]) / 2;
-                        //     averageRGB[1] = (averageRGB[1] + rgbaData[1]) / 2;
-                        //     averageRGB[2] = (averageRGB[2] + rgbaData[2]) / 2;
-                        //     averageRGB[3] = (averageRGB[3] + rgbaData[3]) / 2;
-                        // }
+                //         //     averageRGB[0] = (averageRGB[0] + rgbaData[0]) / 2;
+                //         //     averageRGB[1] = (averageRGB[1] + rgbaData[1]) / 2;
+                //         //     averageRGB[2] = (averageRGB[2] + rgbaData[2]) / 2;
+                //         //     averageRGB[3] = (averageRGB[3] + rgbaData[3]) / 2;
+                //         // }
 
-                        averageRGB[0] = (averageRGB[0] + pixels[0]) / 2;
-                        averageRGB[1] = (averageRGB[1] + pixels[1]) / 2;
-                        averageRGB[2] = (averageRGB[2] + pixels[2]) / 2;
+                //         averageRGB[0] = (averageRGB[0] + pixels[0]) / 2;
+                //         averageRGB[1] = (averageRGB[1] + pixels[1]) / 2;
+                //         averageRGB[2] = (averageRGB[2] + pixels[2]) / 2;
+                //     }
+                // }
 
-                        rr = (rr + pixels[3]) / 2;
-                        gg = (gg + pixels[3]) / 2;
-                        bb = (bb + pixels[3]) / 2;
-                    }
+
+                let averagePixelRGB = [0, 0, 0];
+
+                let canvasPixelColor = context.getImageData(i * pixelsInWidth, j * pixelsInHeight, pixelsInWidth, pixelsInHeight);
+                console.log("Trace data Here");
+
+                let counterr = 0;
+                let rrr = 0;
+                let ggg = 0;
+                let bbb = 0;
+
+                for (let i = 0; i < canvasPixelColor.data.length; i += 4) {
+                    let r = canvasPixelColor.data[i];
+                    let g = canvasPixelColor.data[i + 1];
+                    let b = canvasPixelColor.data[i + 2];
+                    let a = canvasPixelColor.data[i + 3];
+
+                    rrr = (rrr + r) / 2;
+                    ggg = (ggg + g) / 2;
+                    bbb = (bbb + b) / 2;
+                    counterr++;
                 }
-                // console.log(averageRGB, i * pixelsInWidth, i * pixelsInWidth + pixelsInWidth, j * pixelsInHeight, j * pixelsInHeight + pixelsInHeight);
+                averagePixelRGB = [rrr, ggg, bbb];
 
-                // console.log(rr, gg, bb);
-                imageDataLocal.push(averageRGB);
+                // console.log(i, j, averageRGB, averagePixelRGB);
+
+
+                imageDataLocal.push(averagePixelRGB);
             }
         }
 
