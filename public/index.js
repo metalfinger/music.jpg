@@ -18,7 +18,7 @@ $(document).ready(function() {
     //Fetch all data from database  
     function fetchAllData() {
 
-        console.log("Fetching data from database");
+        console.log("Fetching data from database - Firebase");
 
 
         fetch('getall', {
