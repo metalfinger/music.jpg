@@ -1,29 +1,41 @@
 $(document).ready(function() {
 
-    // fetch('test', {
-    //         method: 'POST',
-    //         body: JSON.stringify({ data: 'test' }),
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     .then(response => response.json())
-    //     .then(data => console.log(data));
+    sortByRecent();
 
+    $(".recent__btn").click(function() {
+        sortByRecent();
+    });
 
-    fetchAllData();
+    $(".sort__btn").click(function() {
+        sortByNumPlayed();
+    });
+
+    function sortByRecent() {
+        $(".selected").removeClass("selected");
+        $(".recent__btn").addClass("selected");
+
+        $(".art__grid").empty();
+        fetchAllData('createdAt');
+    }
+
+    function sortByNumPlayed() {
+        $(".selected").removeClass("selected");
+        $(".sort__btn").addClass("selected");
+
+        $(".art__grid").empty();
+        fetchAllData('numPlayed');
+    }
+
 
     let musicData = [];
 
     //Fetch all data from database  
-    function fetchAllData() {
-
-        console.log("Fetching data from database - Firebase");
+    function fetchAllData(filterType) {
 
 
         fetch('getall', {
                 method: 'POST',
-                body: JSON.stringify({ data: 'test' }),
+                body: JSON.stringify({ data: filterType }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -56,20 +68,10 @@ $(document).ready(function() {
                             '    </div>' +
                             '    <div class="art__btn__holder">' +
                             '        <div class="btn__wrapper play__art" data-played=' + element.numPlayed + ' data-index=' + thisElementID.toString() + '>' +
-                            '            <div class="btn__text"><span class="played__data">▶ play</span> (Played : ' + element.numPlayed + ')</div>' +
+                            '            <div class="btn__text"><div class="played__data">▶ play</div> </br>(Played ' + element.numPlayed + ' times)</div>' +
                             '        </div>' +
                             '    </div>' +
                             '</div>';
-                        // '<div class="art__unit">' +
-                        // '    <div class="art__image__holder">' +
-                        // '        <div class="art__image" style="background-image:url(' + imageUrl.toString() + ');"></div>' +
-                        // '    </div>' +
-                        // '    <div class="art__btn__holder">' +
-                        // '        <div class="btn__wrapper play__art" data-index=' + thisElementID.toString() + '>' +
-                        // '            <div class="btn__text">play</div>' +
-                        // '        </div>' +
-                        // '    </div>' +
-                        // '</div>';
 
                         $("#art__container").append(subInnerHtml);
                     }

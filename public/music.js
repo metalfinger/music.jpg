@@ -223,7 +223,7 @@ function loopstep(time) {
             $(".art__unit").removeClass("disable__btn");
 
             let currenlyPlayedNumber = $(currentPlayButtonReference).parent().attr("data-played");
-            $(currentPlayButtonReference).html('<span class="played__data">▶ play</span> (Played : ' + currenlyPlayedNumber + ')');
+            $(currentPlayButtonReference).html('<div class="played__data">▶ play</div> </br>(Played ' + currenlyPlayedNumber + ' times)');
 
             //<span class="played__data">▶ play</span> (Played : ' + element.numPlayed + ')
         }

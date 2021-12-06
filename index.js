@@ -42,11 +42,11 @@ async function addDocument(_musicData, _imageSrc, _numPlayed) {
     console.log('Added document with ID: ', res.id);
 }
 
-async function getAllDocuments() {
+async function getAllDocuments(filterValue) {
     const mainDataRef = db.collection('maindata');
 
     // const snapshot = await citiesRef.where('capital', '==', true).get();
-    const mainData = await mainDataRef.get().then(function(snapshot) {
+    const mainData = await mainDataRef.orderBy(filterValue).get().then(function(snapshot) {
 
 
         let masterData = [];
@@ -58,7 +58,7 @@ async function getAllDocuments() {
             masterData.push(dataObject);
         });
 
-        return masterData;
+        return masterData.reverse();
     });
 
     return mainData;
@@ -264,9 +264,9 @@ app.use(express.json());
 app.use(fileUpload());
 
 app.post('/getall', (req, res) => {
-    console.log(req.body);
+    console.log(req.body.data);
 
-    getAllDocuments().then(function(data) {
+    getAllDocuments(req.body.data).then(function(data) {
         // console.log(data);
         res.json(data);
     });
